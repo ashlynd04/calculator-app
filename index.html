@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iOS Calculator Clone</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      width: 320px;
+    }
+
+    .display {
+      background: black;
+      color: white;
+      text-align: right;
+      font-size: 60px;
+      padding: 20px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 10px;
+    }
+
+    button {
+      height: 70px;
+      font-size: 24px;
+      border: none;
+      border-radius: 50%;
+      background: #333;
+      color: white;
+      transition: background 0.2s;
+    }
+
+    button:active {
+      opacity: 0.8;
+    }
+
+    .button-zero {
+      grid-column: span 2;
+      border-radius: 35px;
+      text-align: left;
+      padding-left: 28px;
+    }
+
+    .gray {
+      background: #a5a5a5;
+      color: black;
+    }
+
+    .orange {
+      background: #ff9f0a;
+      color: white;
+    }
+
+    .icon-button {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="gray" onclick="clearDisplay()">AC</button>
+      <button class="gray" onclick="toggleSign()">+/-</button>
+      <button class="gray" onclick="percent()">%</button>
+      <button class="orange" onclick="setOperation('/')">&divide;</button>
+
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button class="orange" onclick="setOperation('*')">&times;</button>
+
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button class="orange" onclick="setOperation('-')">&minus;</button>
+
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button class="orange" onclick="setOperation('+')">+</button>
+
+      
+      <button class="button-zero" onclick="appendNumber('0')">0</button>
+      <button onclick="appendDot()">.</button>
+      <button class="orange" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let currentInput = '0';
+    let previousInput = '';
+    let operation = null;
+
+    const display = document.getElementById('display');
+
+    function updateDisplay() {
+      display.textContent = currentInput;
+    }
+
+    function clearDisplay() {
+      currentInput = '0';
+      previousInput = '';
+      operation = null;
+      updateDisplay();
+    }
+
+    function appendNumber(number) {
+      if (currentInput === '0') {
+        currentInput = number;
+      } else {
+        currentInput += number;
+      }
+      updateDisplay();
+    }
+
+    function appendDot() {
+      if (!currentInput.includes('.')) {
+        currentInput += '.';
+      }
+      updateDisplay();
+    }
+
+    function toggleSign() {
+      currentInput = (parseFloat(currentInput) * -1).toString();
+      updateDisplay();
+    }
+
+    function percent() {
+      currentInput = (parseFloat(currentInput) / 100).toString();
+      updateDisplay();
+    }
+
+    function setOperation(op) {
+      if (currentInput === '') return;
+      if (previousInput !== '') {
+        calculate();
+      }
+      operation = op;
+      previousInput = currentInput;
+      currentInput = '';
+    }
+
+    function calculate() {
+      if (previousInput === '' || currentInput === '') return;
+      let result;
+      const prev = parseFloat(previousInput);
+      const curr = parseFloat(currentInput);
+      switch (operation) {
+        case '+': result = prev + curr; break;
+        case '-': result = prev - curr; break;
+        case '*': result = prev * curr; break;
+        case '/': result = curr === 0 ? 'Error' : prev / curr; break;
+        default: return;
+      }
+      currentInput = result.toString();
+      operation = null;
+      previousInput = '';
+      updateDisplay();
+    }
+
+    function calculatorInfo() {
+      alert("iOS Calculator Clone\nBuilt with HTML, CSS, and JavaScript");
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>
